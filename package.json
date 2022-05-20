@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "three": "^0.140.2"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.14",
+    "@types/three": "^0.140.0",
+    "http-server": "^14.1.0",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.1"
+  }
+}
