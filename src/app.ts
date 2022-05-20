@@ -1,3 +1,8 @@
+/*
+Threejsのカメラは軸が手前に来るようになっている（いわゆる、数学で書くグラフのような座標系でxが右方向yは上方向zは手前方向に軸が伸びている）
+translateOnAxisは図形内の中心座標を移動させている。
+つまり三角形に対してtranslateOnAxisを実行すると三角形の中心がtranslateOnAxisによって移動させたポイントになる。
+*/
 import * as $ from "jquery";
 import * as THREE from "three";
 $(function () {
@@ -8,8 +13,10 @@ $(function () {
     let camera = new THREE.PerspectiveCamera(75, $mainFrame.width() / $mainFrame.height(), 0.1, 1000);
     let renderer = new THREE.WebGLRenderer();
     renderer.setSize($mainFrame.width(), $mainFrame.height());
+    camera.position.x = 5;
     camera.position.z = 5;
     camera.position.y = 1;
+    camera.rotation.y += 0.5;
 
     // 自動生成されたcanvas要素をdivへ追加する。
     $mainFrame.append(renderer.domElement);
@@ -21,13 +28,9 @@ $(function () {
     // create a simple square shape. We duplicate the top left and bottom right
     // vertices because each vertex needs to appear once per triangle.
     const vertices = new Float32Array([
-        -1.0, -1.0, 0.0,
-        1.0, -1.0, 0.0,
-        1.0, 1.0, 0.0,
-
-        1.0, 1.0, 0.0,
-        -1.0, 1.0, 0.0,
-        -1.0, -1.0, 0.0
+        -1.0, 0.0, 0.0,
+        1.0, 0.0, 0.0,
+        1.0, 2.0, 0.0,
     ]);
 
     // itemSize = 3 because there are 3 values (components) per vertex
@@ -44,11 +47,11 @@ $(function () {
 
     // Asixヘルパー
     let axisHelper = new THREE.AxesHelper(10);
-    //scene.add(axisHelper);
+    scene.add(axisHelper);
 
     // Gridヘルパー
     let gridHelper = new THREE.GridHelper(20, 5);
-    //scene.add(gridHelper);
+    scene.add(gridHelper);
 
     let cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
@@ -57,8 +60,14 @@ $(function () {
     // 繰り返し呼び出してもらう。
     let render = function () {
         window.requestAnimationFrame(render);
-        cube.rotation.y += 0.01;
+        cube.translateOnAxis(new THREE.Vector3(1, 0, 0), 1);
+        cube.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.01);
+        cube.translateOnAxis(new THREE.Vector3(1, 0, 0), -1);
         //cube.rotation.y += 0.01;
+        //cube.translateX(-1);
+        //cube.rotateY(0.01);
+        //cube.translateX(1);
+        //camera.rotation.y += 0.1;
         renderer.render(scene, camera);
     };
     render();
